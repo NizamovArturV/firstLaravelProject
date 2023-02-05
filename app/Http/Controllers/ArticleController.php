@@ -2,54 +2,96 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreArticleRequest;
+use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Services\ArticleService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
+/**
+ * Class ArticleController
+ * @package App\Http\Controllers
+ */
 class ArticleController extends Controller
 {
-    public function index()
+    /**
+     * @param ArticleService $articleService
+     * @return Application|Factory|View
+     */
+    public function index(ArticleService $articleService)
     {
-        $articles = Article::where('is_published', true)->orderBy('created_at', 'desc')->get();
-
-        return view('articles.index')->with('articles', $articles);
+        return view('articles.index')->with('articles',  $articleService->getArticles());
     }
 
-    public function detail(string $slug)
+    /**
+     * @param Article $article
+     * @return Application|Factory|View
+     */
+    public function show(Article $article)
     {
-        $article = Article::where('code', $slug)->first();
-
-        if (!$article) {
-            redirect('/');
-        }
-
         return view('articles.detail')->with('article', $article);
     }
 
+    /**
+     * @return Application|Factory|View
+     */
     public function create()
     {
         return view('articles.create');
     }
 
-    public function store(Request $request)
+    /**
+     * @param UpdateArticleRequest $request
+     * @param ArticleService $articleService
+     * @param Article $article
+     * @return RedirectResponse
+     */
+    public function update(UpdateArticleRequest $request, ArticleService $articleService, Article $article)
     {
-        Validator::make($request->all(), [
-            'title' => ['required', 'max:100', 'min:5'],
-            'code' => ['required', 'alpha_dash', 'unique:' . Article::class . ',code'],
-            'preview_text' => ['required', 'max:255'],
-            'detail_text' => ['required'],
-        ], [
-            'required' => 'Поле :attribute обязятельно для заполнения',
-            'alpha_dash' => 'Поле :attribute должно содержать только латинские символы, цифры и символы тире и подчеркивания',
-            'max' => 'Значение :attribute превышает размер максимально допустимого - :max',
-            'min' => 'Значение :attribute имеет меньший размер, чем минимально допустимое - :min',
-            'code.unique' => 'Статья с таким символьным кодом уже существует'
-        ])->validate();
+        if (!$articleService->update($article, $request->getDto())) {
+            return redirect()->back()->withErrors('Не удалось изменить статью, попробуйте позже');
+        }
 
+        return redirect()->route('articles.show', $article)->with('success', 'Статья успешно изменена');
+    }
 
+    /**
+     * @param Article $article
+     * @return Application|Factory|View
+     */
+    public function edit(Article $article)
+    {
+        return view('articles.edit')->with('article', $article);
+    }
 
-        $article = Article::create($request->all());
+    /**
+     * @param Article $article
+     * @param ArticleService $articleService
+     * @return RedirectResponse
+     */
+    public function destroy(Article $article, ArticleService $articleService)
+    {
+        if (!$articleService->delete($article)) {
+            return redirect()->back()->withErrors('Не удалось удалить статью, попробуйте позже');
+        }
 
-        return redirect('/articles/' . $article->code);
+        return redirect()->route('mainPage')->with('success', 'Статья успешно удалена');
+    }
+
+    /**
+     * @param StoreArticleRequest $request
+     * @param ArticleService $articleService
+     * @return RedirectResponse
+     */
+    public function store(StoreArticleRequest $request, ArticleService $articleService)
+    {
+        if (!$articleService->create($request->getDto())) {
+            return redirect()->back()->withErrors('Не удалось создать статью, попробуйте позже');
+        }
+
+        return redirect()->route('mainPage')->with('success', 'Статья успешно создана');
     }
 }

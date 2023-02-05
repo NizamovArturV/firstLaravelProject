@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+    @include('layout.success')
     @foreach($articles as $article)
         @include('articles.item')
     @endforeach
