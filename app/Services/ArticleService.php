@@ -70,7 +70,7 @@ final class ArticleService
         $article->code = $articleDto->getCode();
         $article->preview_text = $articleDto->getPreviewText();
         $article->detail_text = $articleDto->getDetailText();
-        $article->is_published = $articleDto->isIsPublished();
+        $article->is_published = $articleDto->isPublished();
 
         return $article;
     }

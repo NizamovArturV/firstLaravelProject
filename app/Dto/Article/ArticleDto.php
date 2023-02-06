@@ -24,33 +24,33 @@ class ArticleDto
     /**
      * @var string
      */
-    private string $preview_text;
+    private string $previewText;
 
     /**
      * @var string
      */
-    private string $detail_text;
+    private string $detailText;
 
     /**
      * @var bool
      */
-    private bool $is_published;
+    private bool $isPublished;
 
     /**
      * ArticleDto constructor.
      * @param string $title
      * @param string $code
-     * @param string $preview_text
-     * @param string $detail_text
-     * @param bool $is_published
+     * @param string $previewText
+     * @param string $detailText
+     * @param bool $isPublished
      */
-    public function __construct(string $title, string $code, string $preview_text, string $detail_text, bool $is_published = false)
+    public function __construct(string $title, string $code, string $previewText, string $detailText, bool $isPublished = false)
     {
         $this->title = $title;
         $this->code = $code;
-        $this->preview_text = $preview_text;
-        $this->detail_text = $detail_text;
-        $this->is_published = $is_published;
+        $this->previewText = $previewText;
+        $this->detailText = $detailText;
+        $this->isPublished = $isPublished;
     }
 
     /**
@@ -74,7 +74,7 @@ class ArticleDto
      */
     public function getPreviewText(): string
     {
-        return $this->preview_text;
+        return $this->previewText;
     }
 
     /**
@@ -82,14 +82,14 @@ class ArticleDto
      */
     public function getDetailText(): string
     {
-        return $this->detail_text;
+        return $this->detailText;
     }
 
     /**
      * @return bool
      */
-    public function isIsPublished(): bool
+    public function isPublished(): bool
     {
-        return $this->is_published;
+        return $this->isPublished;
     }
 }
