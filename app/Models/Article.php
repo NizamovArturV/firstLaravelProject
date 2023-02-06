@@ -12,4 +12,13 @@ class Article extends Model
     public $guarded = [];
 
     protected $table = 'articles';
+
+    protected $casts = [
+        'is_published' => 'boolean'
+    ];
+
+    public function getRouteKeyName()
+    {
+        return 'code';
+    }
 }
