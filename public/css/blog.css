@@ -1,10 +1,4 @@
 /* stylelint-disable selector-list-comma-newline-after */
-html,
-body,
-main.container {
-    height: 100%;
-}
-
 .blog-header {
     border-bottom: 1px solid #e5e5e5;
 }

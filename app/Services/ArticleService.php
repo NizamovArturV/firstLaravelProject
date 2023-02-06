@@ -15,7 +15,7 @@ final class ArticleService
      */
     public function getArticles()
     {
-        return Article::where('is_published', true)->orderBy('created_at', 'desc')->get();
+        return Article::with('tags')->where('is_published', true)->orderBy('created_at', 'desc')->get();
     }
 
     /**
