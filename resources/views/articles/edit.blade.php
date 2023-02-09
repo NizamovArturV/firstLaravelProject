@@ -8,14 +8,14 @@
 
     @include('layout.errors')
 
-    <form method="post" action="{{route('articles.update', [$article])}}">
+    <form class="mt-3" method="post" action="{{route('articles.update', [$article])}}">
         @csrf
         @method('PATCH')
         @include('articles.form')
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 
-    <form method="post" action="{{route('articles.destroy', [$article])}}">
+    <form class="mt-3" method="post" action="{{route('articles.destroy', [$article])}}">
         @csrf
         @method('DELETE')
         <button type="submit" class="btn btn-danger">Удалить</button>

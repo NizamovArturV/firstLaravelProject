@@ -29,8 +29,8 @@
 <div class="mb-3 form-group">
     <label for="article_tag_select" class="form-label">Теги</label>
     <select multiple id="article_tag_select" class="form-control" name="tags[]">
-        @foreach($article->tags as $tag)
-            <option value="{{$tag->id}}">{{$tag->name}}</option>
+        @foreach($tagsCloud as $tag)
+            <option {{$article->tags->contains($tag) ? 'selected' : ''}} value="{{$tag->name}}">{{$tag->name}}</option>
         @endforeach
     </select>
 </div>

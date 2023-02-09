@@ -10,6 +10,17 @@ use App\Models\Article;
 final class ArticleService
 {
 
+    private TagService $tagService;
+
+    /**
+     * ArticleService constructor.
+     * @param TagService $tagService
+     */
+    public function __construct(TagService $tagService)
+    {
+        $this->tagService = $tagService;
+    }
+
     /**
      * @return mixed
      */
@@ -31,6 +42,10 @@ final class ArticleService
             return false;
         }
 
+        if (!$this->tagService->sync($articleDto->getTags(), $article)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -44,6 +59,10 @@ final class ArticleService
         $article = $this->prepareArticle($article, $articleDto);
 
         if (!$article->save()) {
+            return false;
+        }
+
+        if (!$this->tagService->sync($articleDto->getTags(), $article)) {
             return false;
         }
 

@@ -6,6 +6,7 @@
 
 @section('content')
     @include('layout.success')
+    @include('layout.tags', ['tags' => $article->tags])
     {{$article->created_at->format('d.m.Y H:i:s')}}
     {{$article->detail_text}}
 

@@ -30,10 +30,12 @@ class UpdateArticleRequest extends FormRequest
     {
         return [
             'title' => ['required', 'max:100', 'min:5'],
-            'code' => ['required', 'alpha_dash'],
+            'code' => ['required', 'regex:/^[a-z0-9]+(?:[-_][a-z0-9]+)*$/'],
             'preview_text' => ['required', 'max:255'],
             'detail_text' => ['required'],
-            'is_published' => ['nullable']
+            'is_published' => ['nullable'],
+            'tags' => ['array'],
+            'tags.*' => ['regex:/^[a-z0-9]+(?:[-_][a-z0-9]+)*$/']
         ];
     }
 
@@ -60,7 +62,8 @@ class UpdateArticleRequest extends FormRequest
             $this->get('code'),
             $this->get('preview_text'),
             $this->get('detail_text'),
-            $this->has('is_published')
+            $this->has('is_published'),
+            $this->has('tags') ? $this->collect('tags') : null
         );
     }
 }

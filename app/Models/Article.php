@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Article extends Taggable
 {
     use HasFactory;
 
@@ -22,8 +21,8 @@ class Article extends Model
         return 'code';
     }
 
-    public function tags()
+    protected function getBoundsTableTags(): string
     {
-        return $this->belongsToMany(Tag::class);
+        return 'article_tag';
     }
 }

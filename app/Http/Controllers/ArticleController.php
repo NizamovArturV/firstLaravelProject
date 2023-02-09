@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
+use App\Models\Tag;
 use App\Services\ArticleService;
+use App\Services\TagService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -36,11 +38,12 @@ class ArticleController extends Controller
     }
 
     /**
+     * @param TagService $tagService
      * @return Application|Factory|View
      */
-    public function create()
+    public function create(TagService $tagService)
     {
-        return view('articles.create');
+        return view('articles.create')->with('tagsCloud', $tagService->getTagsCloud());
     }
 
     /**
@@ -60,11 +63,12 @@ class ArticleController extends Controller
 
     /**
      * @param Article $article
+     * @param TagService $tagService
      * @return Application|Factory|View
      */
-    public function edit(Article $article)
+    public function edit(Article $article, TagService $tagService)
     {
-        return view('articles.edit')->with('article', $article);
+        return view('articles.edit')->with('article', $article)->with('tagsCloud', $tagService->getTagsCloud());
     }
 
     /**
@@ -93,5 +97,22 @@ class ArticleController extends Controller
         }
 
         return redirect()->route('mainPage')->with('success', 'Статья успешно создана');
+    }
+
+    /**
+     * @TODO временный метод до реализации полноценной фильтрации
+     * @param Tag $tag
+     * @return Application|Factory|View
+     */
+    public function tag(Tag $tag)
+    {
+        return view('articles.index')
+            ->with('articles',
+                $tag->articles()
+                    ->with('tags')
+                    ->where('is_published', true)
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+            );
     }
 }
