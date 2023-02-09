@@ -4,6 +4,8 @@
 namespace App\Dto\Article;
 
 
+use Illuminate\Support\Collection;
+
 /**
  * Class ArticleDto
  * @package App\Dto\Article
@@ -36,6 +38,8 @@ class ArticleDto
      */
     private bool $isPublished;
 
+    private ?Collection $tags;
+
     /**
      * ArticleDto constructor.
      * @param string $title
@@ -43,14 +47,16 @@ class ArticleDto
      * @param string $previewText
      * @param string $detailText
      * @param bool $isPublished
+     * @param Collection|null $tags
      */
-    public function __construct(string $title, string $code, string $previewText, string $detailText, bool $isPublished = false)
+    public function __construct(string $title, string $code, string $previewText, string $detailText, bool $isPublished = false, ?Collection $tags = null)
     {
         $this->title = $title;
         $this->code = $code;
         $this->previewText = $previewText;
         $this->detailText = $detailText;
         $this->isPublished = $isPublished;
+        $this->tags = $tags;
     }
 
     /**
@@ -91,5 +97,10 @@ class ArticleDto
     public function isPublished(): bool
     {
         return $this->isPublished;
+    }
+
+    public function getTags(): ?Collection
+    {
+        return $this->tags;
     }
 }

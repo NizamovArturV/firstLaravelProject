@@ -10,12 +10,23 @@ use App\Models\Article;
 final class ArticleService
 {
 
+    private TagService $tagService;
+
+    /**
+     * ArticleService constructor.
+     * @param TagService $tagService
+     */
+    public function __construct(TagService $tagService)
+    {
+        $this->tagService = $tagService;
+    }
+
     /**
      * @return mixed
      */
     public function getArticles()
     {
-        return Article::where('is_published', true)->orderBy('created_at', 'desc')->get();
+        return Article::with('tags')->where('is_published', true)->orderBy('created_at', 'desc')->get();
     }
 
     /**
@@ -31,7 +42,7 @@ final class ArticleService
             return false;
         }
 
-        return true;
+        return $this->tagService->sync($articleDto->getTags(), $article);
     }
 
     /**
@@ -47,7 +58,7 @@ final class ArticleService
             return false;
         }
 
-        return true;
+        return $this->tagService->sync($articleDto->getTags(), $article);
     }
 
     /**

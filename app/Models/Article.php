@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Article extends Taggable
 {
     use HasFactory;
 
@@ -20,5 +19,10 @@ class Article extends Model
     public function getRouteKeyName()
     {
         return 'code';
+    }
+
+    protected function getBoundsTableTags(): string
+    {
+        return 'article_tag';
     }
 }

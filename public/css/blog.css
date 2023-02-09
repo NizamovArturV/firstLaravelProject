@@ -1,8 +1,21 @@
 /* stylelint-disable selector-list-comma-newline-after */
-html,
-body,
-main.container {
+html {
     height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+main.container {
+    flex: 1 1 auto;
+}
+
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
 }
 
 .blog-header {

@@ -26,3 +26,20 @@
         {{ (bool)old('is_published', $article->is_published) === true ? 'checked' : ''}}>
     <label class="form-check-label" for="is_published">Опубликовано</label>
 </div>
+<div class="mb-3 form-group">
+    <label for="article_tag_select" class="form-label">Теги</label>
+    <select multiple id="article_tag_select" class="form-control" name="tags[]">
+        @foreach($tagsCloud as $tag)
+            <option {{$article->tags->contains($tag) ? 'selected' : ''}} value="{{$tag->name}}">{{$tag->name}}</option>
+        @endforeach
+    </select>
+</div>
+@section('script')
+    <script>
+        $('#article_tag_select').select2({
+            placeholder: 'Выберите тег',
+            tags: true,
+            tokenSeparators: [',', ' ']
+        })
+    </script>
+@endsection

@@ -31,9 +31,11 @@ class StoreArticleRequest extends FormRequest
     {
         return [
             'title' => ['required', 'max:100', 'min:5'],
-            'code' => ['required', 'alpha_dash', 'unique:' . Article::class . ',code'],
+            'code' => ['required', 'regex:/^[a-z0-9]+(?:[-_][a-z0-9]+)*$/', 'unique:' . Article::class . ',code'],
             'preview_text' => ['required', 'max:255'],
             'detail_text' => ['required'],
+            'tags' => ['array'],
+            'tags.*' => ['regex:/^[a-z0-9]+(?:[-_][a-z0-9]+)*$/']
         ];
     }
 
@@ -61,7 +63,8 @@ class StoreArticleRequest extends FormRequest
             $this->get('code'),
             $this->get('preview_text'),
             $this->get('detail_text'),
-            $this->has('is_published')
+            $this->has('is_published'),
+            $this->has('tags') ? $this->collect('tags') : null
         );
     }
 }
