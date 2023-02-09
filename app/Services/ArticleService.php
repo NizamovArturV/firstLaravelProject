@@ -42,11 +42,7 @@ final class ArticleService
             return false;
         }
 
-        if (!$this->tagService->sync($articleDto->getTags(), $article)) {
-            return false;
-        }
-
-        return true;
+        return $this->tagService->sync($articleDto->getTags(), $article);
     }
 
     /**
@@ -62,11 +58,7 @@ final class ArticleService
             return false;
         }
 
-        if (!$this->tagService->sync($articleDto->getTags(), $article)) {
-            return false;
-        }
-
-        return true;
+        return $this->tagService->sync($articleDto->getTags(), $article);
     }
 
     /**

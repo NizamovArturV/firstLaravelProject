@@ -19,13 +19,29 @@ use Illuminate\Http\RedirectResponse;
  */
 class ArticleController extends Controller
 {
+
+    private ArticleService $articleService;
+
+    private TagService $tagService;
+
     /**
+     * ArticleController constructor.
      * @param ArticleService $articleService
+     * @param TagService $tagService
+     */
+    public function __construct(ArticleService $articleService, TagService $tagService)
+    {
+        $this->articleService = $articleService;
+        $this->tagService = $tagService;
+    }
+
+
+    /**
      * @return Application|Factory|View
      */
-    public function index(ArticleService $articleService)
+    public function index()
     {
-        return view('articles.index')->with('articles',  $articleService->getArticles());
+        return view('articles.index')->with('articles',  $this->articleService->getArticles());
     }
 
     /**
@@ -38,23 +54,21 @@ class ArticleController extends Controller
     }
 
     /**
-     * @param TagService $tagService
      * @return Application|Factory|View
      */
-    public function create(TagService $tagService)
+    public function create()
     {
-        return view('articles.create')->with('tagsCloud', $tagService->getTagsCloud());
+        return view('articles.create')->with('tagsCloud', $this->tagService->getTagsCloud());
     }
 
     /**
      * @param UpdateArticleRequest $request
-     * @param ArticleService $articleService
      * @param Article $article
      * @return RedirectResponse
      */
-    public function update(UpdateArticleRequest $request, ArticleService $articleService, Article $article)
+    public function update(UpdateArticleRequest $request, Article $article)
     {
-        if (!$articleService->update($article, $request->getDto())) {
+        if (!$this->articleService->update($article, $request->getDto())) {
             return redirect()->back()->withErrors('Не удалось изменить статью, попробуйте позже');
         }
 
@@ -63,22 +77,20 @@ class ArticleController extends Controller
 
     /**
      * @param Article $article
-     * @param TagService $tagService
      * @return Application|Factory|View
      */
-    public function edit(Article $article, TagService $tagService)
+    public function edit(Article $article)
     {
-        return view('articles.edit')->with('article', $article)->with('tagsCloud', $tagService->getTagsCloud());
+        return view('articles.edit')->with('article', $article)->with('tagsCloud', $this->tagService->getTagsCloud());
     }
 
     /**
      * @param Article $article
-     * @param ArticleService $articleService
      * @return RedirectResponse
      */
-    public function destroy(Article $article, ArticleService $articleService)
+    public function destroy(Article $article)
     {
-        if (!$articleService->delete($article)) {
+        if (!$this->articleService->delete($article)) {
             return redirect()->back()->withErrors('Не удалось удалить статью, попробуйте позже');
         }
 
@@ -87,12 +99,11 @@ class ArticleController extends Controller
 
     /**
      * @param StoreArticleRequest $request
-     * @param ArticleService $articleService
      * @return RedirectResponse
      */
-    public function store(StoreArticleRequest $request, ArticleService $articleService)
+    public function store(StoreArticleRequest $request)
     {
-        if (!$articleService->create($request->getDto())) {
+        if (!$this->articleService->create($request->getDto())) {
             return redirect()->back()->withErrors('Не удалось создать статью, попробуйте позже');
         }
 
